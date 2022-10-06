@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/plugins/bootstrap-3.4.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/plugins/font-awesome-4.7.0/css/font-awesome.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/marked/4.1.1/marked.min.js"></script>
+    <!-- 引入marked.js -->
+    <title>index</title>
+    <style>
+        .btn-group {
+            padding: 5px 10px;
+            font-size: 12px;
+            line-height: 1.5;
+            border-radius: 3px;
+            width: 50%;
+        }
+
+        .btn-group .btn-lg:hover {
+            color: #333;
+            background-color: #e6e6e6;
+            border-color: #adadad;
+        }
+
+        .btn-group .btn-lg {
+            position: relative;
+        }
+
+        .hide {
+            display: none;
+
+        }
+
+        .btn-group .btn-lg .items {
+            display: none;
+            position: absolute;
+
+
+            padding: 10px 15px;
+            margin-bottom: -1px;
+            background-color: black;
+            border: 1px solid #ddd;
+
+        }
+
+        .btn-group .btn-lg:hover .items {
+            display: block;
+
+            position: absolute;
+            padding: 10px 15px;
+            margin-bottom: -1px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+
+        }
+
+        .btn-group .btn-lg:hover .items:first-child {
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        .clear_fix {
+            display: block;
+            content: "";
+            clear: both;
+        }
+
+        .hide {
+            display: none
+        }
+
+        .note_cell {
+            width: 100%;
+
+        }
+
+        .note_button {
+            height: 100%;
+        }
+
+        .sidebar {
+            position: absolute;
+            width: 200px;
+            height: 500px;
+            margin-top: 10px;
+            position: absolute;
+            left: 0px;
+        }
+
+        .book-title .switch_btn {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 导航栏 （样式来自bootstrap）-->
+    <nav class="navbar navbar-default">
+        <div class="container ">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">notebook<i class="fa fa-book" aria-hidden="true"></i></a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="javascript:self.close()">Quit</a> </li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </div>
+        </div>
+    </nav>
+
+    <!-- container 主要内容 -->
+
+    <div class="container-fluid ">
+        <!-- 菜单（样式来自bootstrap） -->
+        <div class="btn-group">
+            <button class="btn btn-lg " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                文件<i class="fa fa-file" aria-hidden="true"></i> <span class="caret"></span>
+                <ul class="items dropdown-menu">
+                    <li><a href="">新建</a> </li>
+                    <li><a href="">保存</a></li>
+                    <li><a href="">打印</a></li>
+                </ul>
+            </button>
+            <button class="btn btn-lg" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                编辑<i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span class="caret"></span>
+                <ul class="items dropdown-menu">
+                    <li><a href="">新增单元格</a></li>
+                    <li><a href="">上移</a></li>
+                    <li> <a href="">下移</a></li>
+                </ul>
+            </button>
+            <button class="btn btn-lg" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                设置<i class="fa fa-cog" aria-hidden="true"></i> <span class="caret"></span>
+                <ul class="items dropdown-menu">
+                    <li><a href="">字体变大</a> </li>
+                    <li><a href="">字体变小</a> </li>
+                    <li><a href=""> 切换模式</a></li>
+                </ul>
+            </button>
+
+        </div>
+        <div class="row clear_fix">
+            <!-- 左侧边栏 -->
+            <div class="col-md-3">
+                <div><button class="btn-primary" id="sidebarbutton" style="margin-top:40px ">隐藏/显示</button> </div>
+                <div class="panel panel-default sidebar" id="sidebar">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">笔记本集</h3>
+                    </div>
+                    <div class="panel-body">
+                        <span class="book-item">
+                            <span class="btn btn-default btn-lg " id="btn1">
+                                笔记本1
+                            </span>
+                        </span>
+                        <span class="book-item" id="btn2">
+                            <span class="btn btn-default btn-lg" id="btn2">
+                                笔记本2</button>
+                            </span>
+
+
+                    </div>
+                </div>
+            </div>
+            <!--中 -->
+            <div class="col-md-6">
+                <div>
+                    <table id="book2" class="hide">
+                        <thead>
+                            <tr class="book-title">
+                                <th colspan="2">
+                                    <h1 class="markdown_title hide"></h1>
+                                    <h4 class="h5_title">
+                                        <small>笔记标题</small>
+                                        <input type="text" class="title_value">
+                                    </h4>
+                                    <h4><button class="switch_btn">切换模式</button></h4>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="book-content">
+                            <!-- 主要考察点 -->
+                            <tr class="book-row" id="0" value="default cell">
+                                <td>
+                                    <div class="coat">
+                                        <div class="html hide  "></div>
+                                        <textarea rows="4" type="text" style="width : 400px "
+                                            class="note_cell markdown"></textarea>
+                                    </div>
+                                </td>
+                                <td class="sixBtns">
+                                    <button class="note_button select_button">选中</button>
+                                    <button class="note_button upadd_button">向上<i class="fa fa-plus"
+                                            aria-hidden="true"></i></button>
+                                    <button class="note_button delete_button">删除<i class="fa fa-times"
+                                            aria-hidden="true"></i></button>
+                                    <button class="note_button upmove_button">上移<i class="fa fa-arrow-up"
+                                            aria-hidden="true"></i></button>
+                                    <button class="note_button downmove_button">下移<i class="fa fa-arrow-down"
+                                            aria-hidden="true"></i></button>
+                                    <button class="note_button downadd_button">向下<i class="fa fa-plus"
+                                            aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table id="book1" class="hide">
+                        <thead>
+                            <tr class="book-title">
+                                <th colspan="2">
+                                    <h1 class="markdown_title hide"></h1>
+                                    <h4 class="h5_title"><small>笔记标题</small> <input type="text" class="title_value">
+                                    </h4>
+                                    <h4><button class="switch_btn">切换模式</button></h4>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="book-content">
+                            <!-- 主要考察点 -->
+                            <tr class="book-row" id="0" value="default cell">
+                                <td>
+                                    <div class="coat">
+                                        <div class="html hide  "></div>
+
+                                        <textarea rows="4" type="text" style="width : 400px "
+                                            class="note_cell markdown">
+
+## 帮助说明
+### 左侧边栏
+目前仅支持两个笔记本，可以分别编写markdown语言，通过切换模式按钮进行html预览
+### 中间部分
+可以对cell进行新建、删除、上方插入、下方插入、向上移动。向下移动操作，通过“选择”可以查看属性
+### 右侧边栏
+中间部分点击cell后面的“选择”按钮后，可以在此处查看cell的id和创建时间，第一行cell默认创建，创建时间是打开笔记本的时刻
+### 实现方法
+js全部通过dom操作以及marked.js
+css部分运用到了bootstrap样式，文字图标来自fontawesome
+####可变长度输入框由于bug被删除
+    
+                                            
+                                            </textarea>
+
+                                    </div>
+                                </td>
+                                <td class="sixBtns">
+                                    <button class="note_button select_button">选中</button>
+                                    <button class="note_button upadd_button">向上<i class="fa fa-plus"
+                                            aria-hidden="true"></i></button>
+                                    <button class="note_button delete_button">删除<i class="fa fa-times"
+                                            aria-hidden="true"></i></button>
+                                    <button class="note_button upmove_button">上移<i class="fa fa-arrow-up"
+                                            aria-hidden="true"></i></button>
+                                    <button class="note_button downmove_button">下移<i class="fa fa-arrow-down"
+                                            aria-hidden="true"></i></button>
+                                    <button class="note_button downadd_button">向下<i class="fa fa-plus"
+                                            aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- <div id="book3" class="hide">cccc</div> -->
+            </div>
+            <!-- 右 -->
+            <div class="col-md-3">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+
+                        <h3 class="panel-title">属性</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="book1property" class="hide ">
+                            id:
+                            <br>
+                            create_time:
+                        </div>
+                        <div id="book2property" class="hide ">
+                            id:
+                            <br>
+                            create_time:
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        // 显示笔记本与隐藏笔记本
+        window.onload = function () {
+            //不同笔记本显示不同内容
+            let button1 = document.querySelector('#btn1')
+            button1.addEventListener('click', buttonClick1)
+            let button2 = document.querySelector('#btn2')
+            button2.addEventListener('click', buttonClick2)
+            //切换markdown和html
+            let switch_button = document.querySelectorAll('.switch_btn')
+            for (i = 0; i < switch_button.length; i++) {
+                switch_button[i].addEventListener("click", switchMode);
+            }
+
+
+            //笔记本侧边栏隐藏   
+            let timer = null;
+            let sidebarbtn = document.querySelector('#sidebarbutton')
+            sidebarbtn.addEventListener("click", show)
+            //笔记本单元格操作
+            let select_button = document.querySelectorAll('.select_button')
+            let downadd_button = document.querySelectorAll('.downadd_button')
+            let upadd_button = document.querySelectorAll('.upadd_button')
+            let delete_button = document.querySelectorAll('.delete_button')
+            let upmove_button = document.querySelectorAll('.upmove_button')
+            let downmove_button = document.querySelectorAll('.downmove_button')
+
+            for (i = 0; i < select_button.length; i++) {
+                select_button[i].addEventListener("click", rowSel);
+                // console.log(upadd_button)
+                // select_button.addEventListener("click", rowSel);
+                // downadd_button.addEventListener("click", rowDownAdd);
+                // upmove_button.addEventListener("click", rowUpMove);
+                // downmove_button.addEventListener("click", rowDownMove);
+            }
+            for (i = 0; i < delete_button.length; i++) {
+                delete_button[i].addEventListener("click", rowDel);
+            }
+
+            for (i = 0; i < downadd_button.length; i++) {
+                downadd_button[i].addEventListener("click", rowDownAdd);
+            }
+            for (i = 0; i < upadd_button.length; i++) {
+                upadd_button[i].addEventListener("click", rowUpAdd);
+            }
+            for (i = 0; i < upmove_button.length; i++) {
+                upmove_button[i].addEventListener("click", rowUpMove);
+            }
+            for (i = 0; i < downmove_button.length; i++) {
+                downmove_button[i].addEventListener("click", rowDownMove);
+            }
+
+
+
+            function buttonClick1() {
+                let book = document.querySelector('.col-md-6 #book1');
+                let bookproperty = document.querySelector('.col-md-3 #book1property');
+                let otherbook1 = document.querySelector('.col-md-6 #book2');
+                // let otherbook2 = document.querySelector('.col-md-6 #book3');
+                // let otherbook1property = document.querySelector('.col-md-3 #book3property');
+                let otherbook2property = document.querySelector('.col-md-3 #book2property');
+                otherbook1.classList.add('hide');
+                // otherbook2.classList.add('hide');
+                // otherbook1property.classList.add('hide');
+                otherbook2property.classList.add('hide');
+                book.classList.remove('hide')
+                bookproperty.classList.remove('hide')
+
+                //笔记本的第一行没有创建时间，所以为id=0的加时间
+                let nowTime = Date()
+                let default_cells = document.querySelectorAll(".book-content")
+                for (let i = 0; i < default_cells.length; i++) {
+                    let default_cell = default_cells[i].querySelector(".book-row")
+                    default_cell.value = nowTime
+                }
+            }
+            function buttonClick2() {
+                let book = document.querySelector('.col-md-6 #book2');
+                let bookproperty = document.querySelector('#book2property');
+                let otherbook1 = document.querySelector('.col-md-6 #book1');
+                // let otherbook2 = document.querySelector('.col-md-6 #book3');
+                let otherbook1property = document.querySelector('#book1property');
+                // let otherbook2property = document.querySelector('#book3property');
+                otherbook1.classList.add('hide');
+                // otherbook2.classList.add('hide');
+                otherbook1property.classList.add('hide');
+                // otherbook2property.classList.add('hide');
+                book.classList.remove('hide')
+                bookproperty.classList.remove('hide')
+
+            }
+            function show() {
+                if (sidebar.offsetLeft === 0) {
+                    move(-200, -10);
+                }
+                if (sidebar.offsetLeft === -200) {
+                    move(0, 10);
+                }
+                function move(target, speed) {
+                    let sidebar = document.querySelector('#sidebar');
+                    clearInterval(timer);
+                    timer = setInterval(function () {
+                        if (sidebar.offsetLeft == target) {
+                            clearInterval(timer);
+                        }
+                        else {
+                            sidebar.style.left = sidebar.offsetLeft + speed + 'px';
+                        }
+                    }, 30)
+                }
+            }
+            function rowSel() {
+                let property = document.querySelector("#book1property")
+                let property2 = document.querySelector("#book2property")
+                
+                let nodeFather = this.parentNode
+                let nodeFatherFarther = nodeFather.parentNode
+                id = nodeFatherFarther.id
+                value = nodeFatherFarther.value
+                //console.log("时间"+value)       
+                property.innerHTML = "id:" + `${id} ` + '<br>' + "create_time:" + `${value} `
+                property2.innerHTML = "id:" + `${id} ` + '<br>' + "create_time:" + `${value} `
+            }
+            function rowDownAdd() {
+                let nodeFather = this.parentNode
+                let nodeFatherFarther = nodeFather.parentNode //当前行结点
+                let nodeFatherFartherFarther = nodeFatherFarther.parentNode
+                let nowId = nodeFatherFarther.value
+                let cloneNode = nodeFatherFarther.cloneNode(true)
+
+                console.log(nodeFatherFarther)
+                console.log(cloneNode)
+                cloneNode.querySelector(".note_cell").value = ""
+                let createTime = Date()
+                let tbody = nodeFatherFartherFarther
+                cloneNode.value = createTime //console.log("克隆时间"+cloneNode.value) // tbody.appendChild(cloneNode)
+                insertAfter(cloneNode, nodeFatherFarther);
+                //遍历重新赋id
+                console.log(cloneNode.id)//console.log("克隆节点的时间是："+cloneNode.value)
+                for (var i = 0; i < tbody.rows.length; i++) {
+                    let x = i
+                    tbody.rows[i].id = x;
+                }
+                cloneNode.cells[1].querySelector(".select_button").addEventListener("click", rowSel);
+                cloneNode.cells[1].querySelector(".downadd_button").addEventListener("click", rowDownAdd);
+                cloneNode.cells[1].querySelector(".upadd_button").addEventListener("click", rowUpAdd);
+                cloneNode.cells[1].querySelector(".delete_button").addEventListener("click", rowDel);
+                cloneNode.cells[1].querySelector(".upmove_button").addEventListener("click", rowUpMove);
+                cloneNode.cells[1].querySelector(".downmove_button").addEventListener("click", rowDownMove);
+
+
+            }
+            function rowUpAdd() {
+                let nodeFather = this.parentNode
+                let nodeFatherFarther = nodeFather.parentNode //当前行结点
+                let nodeFatherFartherFarther = nodeFatherFarther.parentNode
+                let nowId = nodeFatherFarther.value
+                let cloneNode = nodeFatherFarther.cloneNode(true)
+                cloneNode.querySelector(".note_cell").value = ""
+                let createTime = Date()
+                let tbody = nodeFatherFartherFarther
+                cloneNode.value = createTime //console.log("克隆时间"+cloneNode.value) // tbody.appendChild(cloneNode)
+                tbody.insertBefore(cloneNode, nodeFatherFarther);
+                //遍历重新赋id
+                for (var i = 0; i < tbody.rows.length; i++) {
+                    let x = i
+                    tbody.rows[i].id = x;
+                }
+                cloneNode.cells[1].querySelector(".select_button").addEventListener("click", rowSel);
+                cloneNode.cells[1].querySelector(".downadd_button").addEventListener("click", rowDownAdd);
+                cloneNode.cells[1].querySelector(".upadd_button").addEventListener("click", rowUpAdd);
+                cloneNode.cells[1].querySelector(".delete_button").addEventListener("click", rowDel);
+                cloneNode.cells[1].querySelector(".upmove_button").addEventListener("click", rowUpMove);
+                cloneNode.cells[1].querySelector(".downmove_button").addEventListener("click", rowDownMove);
+            }
+            function rowDel() {
+                let nodeFather = this.parentNode
+                let nodeFatherFarther = nodeFather.parentNode //当前行结点
+                let nodeFatherFartherFarther = nodeFatherFarther.parentNode
+                let tbody = nodeFatherFartherFarther
+                if (tbody.children.length == 1) { alert("不可删除"); return }
+                tbody.removeChild(nodeFatherFarther)
+                for (var i = 0; i < tbody.rows.length; i++) {
+                    let x = i
+                    tbody.rows[i].id = x;
+                }
+            }
+            function rowUpMove() {
+                let nodeFather = this.parentNode
+                let nodeFatherFarther = nodeFather.parentNode //当前行结点
+                let nodeFatherFartherFarther = nodeFatherFarther.parentNode
+                let tbody = nodeFatherFartherFarther
+                //保存当前节点和前节点和后节点，当前节点和前节点分别移除父节点后再插入后节点前面
+                let beforeNode = nodeFatherFarther
+                let aftereNode = nodeFatherFarther.previousSibling
+                let xNode = nodeFatherFarther.nextSibling
+                tbody.removeChild(nodeFatherFarther)
+                tbody.removeChild(aftereNode)
+                tbody.insertBefore(aftereNode, xNode)
+                tbody.insertBefore(beforeNode, aftereNode)
+                //遍历重新赋id
+                for (var i = 0; i < tbody.rows.length; i++) {
+                    let x = i
+                    tbody.rows[i].id = x;
+                }
+            }
+            function rowDownMove() {
+                let nodeFather = this.parentNode
+                let nodeFatherFarther = nodeFather.parentNode //当前行结点
+                let nodeFatherFartherFarther = nodeFatherFarther.parentNode
+                let tbody = nodeFatherFartherFarther
+                //保存当前节点、前节点、后节点，当前节点和后节点分别移除父节点后再插入前节点前面
+                let beforeNode = nodeFatherFarther
+                let aftereNode = nodeFatherFarther.previousSibling
+                let xNode = nodeFatherFarther.nextSibling
+                tbody.removeChild(nodeFatherFarther)
+                tbody.removeChild(xNode)
+                insertAfter(xNode, aftereNode)
+                insertAfter(beforeNode, xNode)
+                //遍历重新赋id
+                for (var i = 0; i < tbody.rows.length; i++) {
+                    let x = i
+                    tbody.rows[i].id = x;
+                }
+            }
+            function insertAfter(newElement, targetElement) {
+                let parent = targetElement.parentNode;
+                if (parent.lastChild == targetElement) {
+                    parent.appendChild(newElement);
+                } else {
+                    parent.insertBefore(newElement, targetElement.nextSibling);
+                }
+            }
+            function switchMode() {
+                let nowTable = this.parentNode.parentNode.parentNode.parentNode.parentNode
+                let sixbtns = nowTable.querySelectorAll(".sixBtns")
+                let rowList = nowTable.querySelectorAll(".book-row")
+
+                if (sixbtns[0].classList.contains('hide')) {
+
+                    nowTable.querySelector(".h5_title").classList.remove('hide')  //移除标题
+                    nowTable.querySelector(".markdown_title").classList.add('hide')//生成大标题
+
+                    for (i = 0; i < rowList.length; i++) {
+                        rowList[i].querySelector(".html").classList.add('hide')//移除html模式
+                        rowList[i].querySelector(".markdown").classList.remove('hide')//展示输入框
+                        sixbtns[i].classList.remove('hide');//展示按钮
+                    }
+                }
+                else {
+
+                    // markdown 按钮加hide html去除hide
+                    let title = nowTable.querySelector(".title_value").value;
+                    nowTable.querySelector(".h5_title").classList.add('hide')  //移除标题
+                    nowTable.querySelector(".markdown_title").classList.remove('hide')//生成大标题
+                    nowTable.querySelector(".markdown_title").innerHTML = title
+                    for (i = 0; i < rowList.length; i++) {
+
+                        data = rowList[i].querySelector(".markdown").value
+
+                        //  data="# Marked in browser\n\nRendered by **marked**. "
+                        console.log(data)
+                        rowList[i].querySelector(".html").innerHTML = marked.parse(data);//可变长度div输入框遇到的问题：data内的/n <br>无法识别
+                        // rowList是tr组成的数组,按下按钮，需要取出来innerHTML转换成markdown
+
+                        rowList[i].querySelector(".markdown").classList.add('hide')//隐藏cell框按钮
+                        rowList[i].querySelector(".html").classList.remove('hide')//展示html模式
+                        sixbtns[i].classList.add('hide');//移除按钮
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
